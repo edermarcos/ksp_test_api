@@ -16,37 +16,32 @@ Este proyecto esta creado con Node.js v18.14.0 y el CLI de Nest v9.2
 - [Postgres](https://www.postgresql.org/)
 - [Docker](https://www.docker.com/)
 
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-
-- npm
-  ```sh
-  npm install npm@latest -g
-  ```
+Como requisitos, se recomienda tener instalado `docker` para poder correr la imagen de la base de datos.
+Tambien es una opcion tener `yarn`.
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+1. Ejecutar Docker desktop
 
-1. Get a free API Key at [https://example.com](https://example.com)
+2. Clonar el repositorio
+   ```sh
+   git clone https://github.com/edermarcos/ksp_test_api.git
+   ```
+3. Instalar las dependencias
+   ```sh
+   yarn install
+   ```
+4. Configurar las variables `.env` de entorno basado en el archivo `.env.example`
 
-2. Clone the repo
+5. Ejecutar el comando para levantar la imagen de la base de datos
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   docker compose up -d
    ```
-3. Install NPM packages
+6. Correr el servidor
    ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
+   yarn start:dev
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
