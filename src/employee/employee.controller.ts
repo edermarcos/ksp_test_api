@@ -12,13 +12,18 @@ import { EmployeeService } from './employee.service';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { CreateEmployeeDto, UpdateEmployeeDto } from './dto';
 
-@Controller('employee')
+@Controller('employees')
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
   @Post()
   create(@Body() createEmployeeDto: CreateEmployeeDto) {
     return this.employeeService.create(createEmployeeDto);
+  }
+
+  @Get('seed')
+  populate() {
+    return this.employeeService.populate();
   }
 
   @Get()

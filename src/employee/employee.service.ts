@@ -5,6 +5,7 @@ import { CreateEmployeeDto, UpdateEmployeeDto } from './dto';
 import { Employee } from './entities/employee.entity';
 import { handleDBExceptions } from '../common/helpers/index';
 import { PaginationDto } from '../common/dtos/pagination.dto';
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class EmployeeService {
@@ -12,6 +13,38 @@ export class EmployeeService {
     @InjectRepository(Employee)
     private employeesRepository: Repository<Employee>,
   ) {}
+
+  private createRandomEmployee(): Partial<Employee> {
+    const positions = [
+      'Computer Systems Analyst',
+      'Computer Programmer',
+      'Software Developer',
+      'Software Engineer',
+      'Web Developer',
+      'Web Designer',
+      'Database Administrator',
+      'Network Administrator',
+      'Network Architect',
+      'Network Engineer',
+      'Network Security Engineer',
+    ];
+    const salaries = [
+      20000, 26500, 32000, 36000, 40000, 32600, 22000, 27000, 41900,
+    ];
+    return {
+      fullName: `${faker.name.firstName()} ${faker.name.lastName()}`,
+      position: faker.helpers.arrayElement(positions),
+      salary: faker.helpers.arrayElement(salaries),
+      status: faker.helpers.arrayElement(['active', 'inactive', 'pending']),
+    };
+  }
+
+  populate() {
+    const employees = Array.from({ length: 10 }).map(() =>
+      this.createRandomEmployee(),
+    );
+    return this.employeesRepository.save(employees);
+  }
 
   async create(createEmployeeDto: CreateEmployeeDto) {
     try {
@@ -25,7 +58,7 @@ export class EmployeeService {
   }
 
   async findAll(pagination: PaginationDto) {
-    const { limit = 10, offset = 0 } = pagination;
+    const { limit = 20, offset = 0 } = pagination;
     const [entities, count] = await this.employeesRepository.findAndCount({
       take: limit,
       skip: offset,
