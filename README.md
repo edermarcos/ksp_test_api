@@ -6,11 +6,11 @@
   <p align="center">CRUD basico para una prueba tecnica..</p>
 </div>
 
-## About the Project
+### About the Project
 
 Este proyecto esta creado con Node.js v18.14.0 y el CLI de Nest v9.2
 
-## Tech Stack
+### Tech Stack
 
 - [Nest.js](https://nestjs.com/)
 - [Postgres](https://www.postgresql.org/)
@@ -42,6 +42,10 @@ Tambien es una opcion tener `yarn`.
 6. Correr el servidor
    ```sh
    yarn start:dev
+   ```
+7. (Opcional) Para tener informacion dummy en la tabla de Employees, ejecutar el siguiente comando. Cada que se ejecuta, se agregan 15 registros pero se eliminan los que ya existian.
+   ```sh
+   http://localhost:3000/employees/seed
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>

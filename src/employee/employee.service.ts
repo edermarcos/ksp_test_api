@@ -14,6 +14,18 @@ export class EmployeeService {
     private employeesRepository: Repository<Employee>,
   ) {}
 
+  private async deleteTable(): Promise<void> {
+    try {
+      await this.employeesRepository
+        .createQueryBuilder()
+        .delete()
+        .where({})
+        .execute();
+    } catch (error) {
+      handleDBExceptions(error);
+    }
+  }
+
   private createRandomEmployee(): Partial<Employee> {
     const positions = [
       'Computer Systems Analyst',
@@ -40,10 +52,13 @@ export class EmployeeService {
   }
 
   populate() {
+    this.deleteTable();
     const employees = Array.from({ length: 10 }).map(() =>
       this.createRandomEmployee(),
     );
-    return this.employeesRepository.save(employees);
+    this.employeesRepository.save(employees);
+
+    return 'Employees populated';
   }
 
   async create(createEmployeeDto: CreateEmployeeDto) {
@@ -70,7 +85,9 @@ export class EmployeeService {
         offset,
         pages: Math.ceil(count / limit) || 0,
       },
-      entities,
+      entities: entities.sort((a: Employee, b: Employee) =>
+        a.fullName.localeCompare(b.fullName),
+      ),
     };
   }
 
