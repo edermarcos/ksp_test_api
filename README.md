@@ -35,6 +35,11 @@ Tambien es una opcion tener `yarn`.
    ```
 4. Configurar las variables `.env` de entorno basado en el archivo `.env.example`
 
+5. Crear un volumen para la base de datos
+    ```
+   docker volume create postgres-db
+    ```
+
 5. Ejecutar el comando para levantar la imagen de la base de datos
    ```sh
    docker compose up -d

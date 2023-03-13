@@ -1,28 +1,67 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationDto } from 'src/common/dtos/index.dto';
-import { handleDBExceptions } from 'src/common/helpers';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+
+import { CreateUserDto, UpdateUserDto, UserLoginDto } from './dto';
+import { handleDBExceptions } from 'src/common/helpers';
+import { PaginationDto } from 'src/common/dtos/index.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private readonly usersRepository: Repository<User>,
     private readonly dataSource: DataSource,
+    private readonly jwtService: JwtService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
     try {
-      const entity = this.usersRepository.create(createUserDto);
+      const { password, ...rest } = createUserDto;
+      const entity = this.usersRepository.create({
+        ...rest,
+        password: bcrypt.hashSync(password, 10),
+      });
       await this.usersRepository.save(entity);
 
       return entity;
     } catch (error) {
       handleDBExceptions(error);
     }
+  }
+
+  async logIn(userLoginDto: UserLoginDto) {
+    const { email, password } = userLoginDto;
+    const user = await this.usersRepository.findOne({
+      where: { email },
+      select: ['id', 'password'],
+    });
+
+    if (!user) {
+      throw new UnauthorizedException(`User or password incorrect`);
+    }
+
+    if (!bcrypt.compareSync(password, user.password)) {
+      throw new UnauthorizedException(`User or password incorrect`);
+    }
+
+    return {
+      token: this.jwtService.sign({ id: user.id }),
+    };
+  }
+
+  testToken(user: User) {
+    return {
+      ...user,
+      status: 'OK',
+    };
   }
 
   async findAll(pagination: PaginationDto) {

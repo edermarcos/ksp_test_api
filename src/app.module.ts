@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
+import { Module } from '@nestjs/common';
+
 import { EmployeeModule } from './employee/employee.module';
 import { CommonModule } from './common/common.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    UsersModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -23,6 +23,7 @@ import { CommonModule } from './common/common.module';
     }),
     EmployeeModule,
     CommonModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
