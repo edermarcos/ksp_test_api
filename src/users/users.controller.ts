@@ -16,6 +16,7 @@ import { Auth, GetUser } from './decorators';
 import { CreateUserDto, UpdateUserDto, UserLoginDto } from './dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
+import { ValidRoles } from './interfaces/role.interface';
 
 @Controller('users')
 export class UsersController {
@@ -37,7 +38,7 @@ export class UsersController {
   }
 
   @Get('auth')
-  @Auth()
+  @Auth(ValidRoles.admin, ValidRoles.user)
   auth(@GetUser() user: User) {
     return this.usersService.testToken(user);
   }

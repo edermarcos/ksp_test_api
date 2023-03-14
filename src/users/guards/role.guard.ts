@@ -38,7 +38,7 @@ export class RolesGuard implements CanActivate {
     }
 
     throw new ForbiddenException(
-      `User ${user.username} does not have permission to access this resource`,
+      `User ${user.fullName} does not have permission to access this resource`,
     );
   }
 }
